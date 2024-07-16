@@ -1,2 +1,8 @@
 2024-07-16 17:53:56,279 - __main__ - INFO - Token value: Token not available!
 2024-07-16 17:54:36,936 - __main__ - INFO - Token value: Token not available!
+2024-07-16 18:25:26,744 - __main__ - ERROR - An error occurred: (334, b'UGFzc3dvcmQ6')
+2024-07-16 18:28:07,360 - __main__ - INFO - No new job listings found.
+2024-07-16 18:28:53,428 - __main__ - INFO - No new job listings found.
+2024-07-16 18:30:47,934 - __main__ - INFO - No new job listings found.
+2024-07-16 18:31:41,882 - __main__ - DEBUG - Starting TLS for email server.
+2024-07-16 18:31:42,152 - __main__ - ERROR - An error occurred: (334, b'UGFzc3dvcmQ6')

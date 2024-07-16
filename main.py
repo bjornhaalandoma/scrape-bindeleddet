@@ -1,5 +1,3 @@
-import logging
-import logging.handlers
 import os
 import json
 import requests
@@ -7,19 +5,6 @@ import smtplib
 from bs4 import BeautifulSoup
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-logger_file_handler = logging.handlers.RotatingFileHandler(
-    "status.log",
-    maxBytes=1024 * 1024,
-    backupCount=1,
-    encoding="utf8",
-)
-formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-logger_file_handler.setFormatter(formatter)
-logger.addHandler(logger_file_handler)
 
 # Email configuration
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
@@ -37,7 +22,7 @@ def fetch_web_content():
     if response.status_code == 200:
         return response.text
     else:
-        logger.error(
+        print(
             f"Failed to retrieve the page. Status code: {response.status_code}")
         return None
 
@@ -83,7 +68,7 @@ def check_for_updates():
             with open('old_jobs.json', 'w') as file:
                 json.dump(old_jobs, file, indent=4)
         else:
-            logger.info("No new job listings found.")
+            print("No new job listings found.")
 
 
 def send_email(jobs):
@@ -113,12 +98,12 @@ def send_email(jobs):
             server.starttls()
             server.login(EMAIL_ADDRESS, EMAIL_APP_PASSWORD)
             server.send_message(msg)
-            logger.info("Email sent successfully.")
+            print("Email sent successfully.")
     except smtplib.SMTPAuthenticationError as e:
-        logger.error(f"Failed to send email: {e}")
-        logger.error("Check your email address and app password.")
+        print(f"Failed to send email: {e}")
+        print("Check your email address and app password.")
     except Exception as e:
-        logger.error(f"An error occurred: {e}")
+        print(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":

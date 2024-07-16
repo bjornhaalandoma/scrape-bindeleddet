@@ -1,8 +1,10 @@
 name: run main.py
 
 on:
-  schedule:
-    - cron: "0 0 * * 1" # At 00:00 on Monday
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
   build:
