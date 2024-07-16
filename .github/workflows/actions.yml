@@ -1,9 +1,8 @@
 name: run main.py
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "0 9 * * *" # Run every day at 09:00 UTC
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
@@ -37,7 +36,7 @@ jobs:
           git diff-index --quiet HEAD || git commit -m "updated logs" --allow-empty
 
       - name: push changes
-        uses: ad-m/github-push-action@v0.6.0 # Using v0.6.0 as v1.0.0 does not exist
+        uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
