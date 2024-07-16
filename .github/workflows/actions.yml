@@ -23,7 +23,7 @@ jobs:
 
       - name: execute py script # run main.py
         env:
-          EMAIL_ADDRESS: "omabjorn@gmail.com"
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
         run: python main.py
 
