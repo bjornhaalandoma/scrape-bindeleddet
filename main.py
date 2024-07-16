@@ -22,7 +22,7 @@ logger_file_handler.setFormatter(formatter)
 logger.addHandler(logger_file_handler)
 
 # Email configuration
-EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
+EMAIL_ADDRESS = f"{os.getenv('EMAIL_ADDRESS_USER')}@{os.getenv('EMAIL_ADDRESS_DOMAIN')}"
 EMAIL_APP_PASSWORD = os.getenv("EMAIL_APP_PASSWORD")
 EMAIL_RECEIVER = EMAIL_ADDRESS  # Sending the email to yourself
 
@@ -64,7 +64,7 @@ def parse_with_gpt(html_content):
 def check_for_updates():
     html_content = fetch_web_content()
 
-    if html_content:
+    if (html_content):
         new_jobs = parse_with_gpt(html_content)
 
         old_jobs = []
