@@ -5,7 +5,7 @@ import smtplib
 from bs4 import BeautifulSoup
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
+from datetime import datetime, timedelta
 
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 EMAIL_APP_PASSWORD = os.getenv("EMAIL_APP_PASSWORD")
@@ -61,9 +61,10 @@ def check_for_updates():
             pass  # old_jobs will remain an empty list
 
         new_listings = [job for job in new_jobs if job not in old_jobs]
+        approaching_deadlines = check_approaching_deadlines(new_jobs)
 
-        if new_listings:
-            send_email(new_listings)
+        if new_listings or approaching_deadlines:
+            send_email(new_listings, approaching_deadlines)
             old_jobs.extend(new_listings)
             with open('old_jobs.json', 'w') as file:
                 json.dump(old_jobs, file, indent=4)
@@ -71,20 +72,46 @@ def check_for_updates():
             print("No new job listings found.")
 
 
-def send_email(jobs):
+def check_approaching_deadlines(jobs):
+    approaching_jobs = []
+    today = datetime.today()
+    three_days_from_now = today + timedelta(days=3)
+
+    for job in jobs:
+        try:
+            deadline_date = datetime.strptime(job['deadline'], '%Y-%m-%d')
+            if today <= deadline_date <= three_days_from_now:
+                approaching_jobs.append(job)
+        except ValueError:
+            print(
+                f"Invalid date format for job: {job['title']} at {job['company']}")
+
+    return approaching_jobs
+
+
+def send_email(new_jobs, approaching_deadlines):
     msg = MIMEMultipart()
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = EMAIL_RECEIVER
-    msg['Subject'] = 'Nye stillinger Bindeleddet'
+    msg['Subject'] = 'Stillinger Bindeleddet'
 
     html = """\
     <html>
       <body>
-        <h2>New Job Listings</h2>
+        <h2>Nye stillinger </h2>
         <ul>
     """
-    for job in jobs:
-        html += f"<li><strong>{job['title']}</strong> at {job['company']} - Deadline: {job['deadline']}</li>"
+    for job in new_jobs:
+        html += f"<li><strong>{job['title']}</strong> at {job['company']} - {job['deadline']}</li>"
+
+    if approaching_deadlines:
+        html += """\
+        </ul>
+        <h2>Approaching Deadlines</h2>
+        <ul>
+        """
+        for job in approaching_deadlines:
+            html += f"<li><strong>{job['title']}</strong> at {job['company']} - {job['deadline']} (Approaching!)</li>"
 
     html += """\
         </ul>
