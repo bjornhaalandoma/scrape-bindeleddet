@@ -75,7 +75,7 @@ def send_email(jobs):
     msg = MIMEMultipart()
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = EMAIL_RECEIVER
-    msg['Subject'] = 'New Job Listings'
+    msg['Subject'] = 'Nye stillinger Bindeleddet'
 
     html = """\
     <html>
